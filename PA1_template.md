@@ -13,10 +13,17 @@ data <- read.csv("activity.csv")
 
 ```r
 daysteps <- tapply(data$steps,data$date,sum,na.rm=TRUE)
+png('histgram of daysteps.png')
 hist(daysteps)
+dev.off()
 ```
 
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
+
+```
+## RStudioGD 
+##         2
+```
 
 ```r
 daymean <- tapply(data$steps,data$date,mean,na.rm=TRUE)
@@ -82,10 +89,17 @@ daymedian
 
 ```r
 mean_interval <- tapply(data$steps,data$interval,mean,na.rm=TRUE)
-plot(levels(factor(data$interval)),mean_interval,type="l")
+png('Mean steps for each interval.png')
+plot(levels(factor(data$interval)),mean_interval,type="l",main="mean steps for each interval",xlab="intervals",ylab="steps mean")
+dev.off()
 ```
 
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+
+```
+## RStudioGD 
+##         2
+```
 
 ```r
 levels(factor(data$interval))[which.max(mean_interval)]
@@ -109,10 +123,17 @@ sum(is.na(data$steps))
 daysteps_col <- rep(daysteps, each=length(levels(factor(data$interval))))
 data$steps[is.na(data$steps)] <- daysteps_col[is.na(data$steps)]
 daysteps1 <- tapply(data$steps,data$date,sum,na.rm=TRUE)
+png('histogram of daysteps with NA filed.png')
 hist(daysteps1)
+dev.off()
 ```
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+
+```
+## RStudioGD 
+##         2
+```
 
 ```r
 daymean1 <- tapply(data$steps,data$date,mean,na.rm=TRUE)
@@ -194,13 +215,16 @@ weekdaydata <- subset(data,data$weekdayvec == "weekday")
 weekenddata <- subset(data,data$weekdayvec == "weekend")
 avg_wky <- tapply(weekdaydata$steps,weekdaydata$interval,mean)              
 avg_wkd <- tapply(weekenddata$steps,weekenddata$interval,mean)
-plot(levels(factor(weekdaydata$interval)),avg_wky,type="l")
+png('comparison of weekday and weekend activity.png')
+par(mfrow=c(2,1))
+plot(levels(factor(weekdaydata$interval)),avg_wky,type="l",main="weekday",xlab="intervals",ylab="steps")
+plot(levels(factor(weekenddata$interval)),avg_wkd,type="l",main="weekend",xlab="intervals",ylab="steps")
+dev.off()
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-51.png) 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
 
-```r
-plot(levels(factor(weekenddata$interval)),avg_wkd,type="l")
 ```
-
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-52.png) 
+## RStudioGD 
+##         2
+```

@@ -11,7 +11,9 @@ data <- read.csv("activity.csv")
 
 ```{r  echo=TRUE}
 daysteps <- tapply(data$steps,data$date,sum,na.rm=TRUE)
+png('histgram of daysteps.png')
 hist(daysteps)
+dev.off()
 daymean <- tapply(data$steps,data$date,mean,na.rm=TRUE)
 daymean
 daymedian <- tapply(data$steps,data$date,median,na.rm=TRUE)
@@ -21,7 +23,9 @@ daymedian
 ## What is the average daily activity pattern?
 ```{r echo=TRUE}
 mean_interval <- tapply(data$steps,data$interval,mean,na.rm=TRUE)
-plot(levels(factor(data$interval)),mean_interval,type="l")
+png('Mean steps for each interval.png')
+plot(levels(factor(data$interval)),mean_interval,type="l",main="mean steps for each interval",xlab="intervals",ylab="steps mean")
+dev.off()
 levels(factor(data$interval))[which.max(mean_interval)]
 ```
 
@@ -31,7 +35,9 @@ sum(is.na(data$steps))
 daysteps_col <- rep(daysteps, each=length(levels(factor(data$interval))))
 data$steps[is.na(data$steps)] <- daysteps_col[is.na(data$steps)]
 daysteps1 <- tapply(data$steps,data$date,sum,na.rm=TRUE)
+png('histogram of daysteps with NA filed.png')
 hist(daysteps1)
+dev.off()
 daymean1 <- tapply(data$steps,data$date,mean,na.rm=TRUE)
 daymean1
 daymedian1 <- tapply(data$steps,data$date,median,na.rm=TRUE)
@@ -57,6 +63,9 @@ weekdaydata <- subset(data,data$weekdayvec == "weekday")
 weekenddata <- subset(data,data$weekdayvec == "weekend")
 avg_wky <- tapply(weekdaydata$steps,weekdaydata$interval,mean)              
 avg_wkd <- tapply(weekenddata$steps,weekenddata$interval,mean)
-plot(levels(factor(weekdaydata$interval)),avg_wky,type="l")
-plot(levels(factor(weekenddata$interval)),avg_wkd,type="l")
+png('comparison of weekday and weekend activity.png')
+par(mfrow=c(2,1))
+plot(levels(factor(weekdaydata$interval)),avg_wky,type="l",main="weekday",xlab="intervals",ylab="steps")
+plot(levels(factor(weekenddata$interval)),avg_wkd,type="l",main="weekend",xlab="intervals",ylab="steps")
+dev.off()
 ```
