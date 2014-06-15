@@ -1,20 +1,55 @@
+@@ -0,0 +1,20 @@
 # Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
 
-
-
+```{r echo=TRUE}
+data <- read.csv("activity.csv")
+```
 ## What is mean total number of steps taken per day?
 
-
+```{r  echo=TRUE}
+daysteps <- tapply(data$steps,data$date,sum,na.rm=TRUE)
+hist(daysteps)
+daymean <- tapply(data$steps,data$date,mean,na.rm=TRUE)
+daymedian <- tapply(data$steps,data$date,median,na.rm=TRUE)
+```
 
 ## What is the average daily activity pattern?
-
-
+```{r echo=TRUE}
+mean_interval <- tapply(data$steps,data$interval,mean,na.rm=TRUE)
+plot(levels(factor(data$interval)),mean_interval,type="l")
+levels(factor(data$interval))[which.max(mean_interval)]
+```
 
 ## Imputing missing values
-
-
-
+```{r echo=TRUE}
+sum(is.na(data$steps))
+daysteps_col <- rep(daysteps, each=length(levels(factor(data$interval))))
+data$steps[is.na(data$steps)] <- daysteps_col[is.na(data$steps)]
+daysteps1 <- tapply(data$steps,data$date,sum,na.rm=TRUE)
+hist(daysteps1)
+daymean1 <- tapply(data$steps,data$date,mean,na.rm=TRUE)
+daymedian1 <- tapply(data$steps,data$date,median,na.rm=TRUE)
+```
+### Analysis
+   * the mean and median before(for assignment1) and after inserting the missing values, are the same. This is because the strategy I devise for inserting the value if to put mean value of the day into the NAs.
+   * inputting missing data increase the estimates of the total number of steps per day 
+   
 ## Are there differences in activity patterns between weekdays and weekends?
+
+```{r echo=TRUE}
+data$date <- as.Date(data$date)
+
+weekdayvec <- weekdays(data$date)
+weekdayvec[weekdayvec == "Monday" | weekdayvec == "Tuesday" | weekdayvec == "Wednesday" | weekdayvec == "Thursday" |weekdayvec == "Friday" ] <- "weekday"
+weekdayvec[weekdayvec == "Saturday" | weekdayvec == "Sunday" ] <- "weekend"
+data <- data.frame(data,weekdayvec)
+weekdaydata <- subset(data,data$weekdayvec == "weekday")
+weekenddata <- subset(data,data$weekdayvec == "weekend")
+avg_wky <- tapply(weekdaydata$steps,weekdaydata$interval,mean)              
+avg_wkd <- tapply(weekenddata$steps,weekenddata$interval,mean)
+plot(levels(factor(weekdaydata$interval)),avg_wky,type="l")
+plot(levels(factor(weekenddata$interval)),avg_wkd,type="l")
+```
