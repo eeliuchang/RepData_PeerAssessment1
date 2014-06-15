@@ -13,7 +13,9 @@ data <- read.csv("activity.csv")
 daysteps <- tapply(data$steps,data$date,sum,na.rm=TRUE)
 hist(daysteps)
 daymean <- tapply(data$steps,data$date,mean,na.rm=TRUE)
+daymean
 daymedian <- tapply(data$steps,data$date,median,na.rm=TRUE)
+daymedian
 ```
 
 ## What is the average daily activity pattern?
@@ -31,13 +33,18 @@ data$steps[is.na(data$steps)] <- daysteps_col[is.na(data$steps)]
 daysteps1 <- tapply(data$steps,data$date,sum,na.rm=TRUE)
 hist(daysteps1)
 daymean1 <- tapply(data$steps,data$date,mean,na.rm=TRUE)
+daymean1
 daymedian1 <- tapply(data$steps,data$date,median,na.rm=TRUE)
+daymedian1
 ```
 ### Analysis
    * the mean and median before(for assignment1) and after inserting the missing values, are the same. This is because the strategy I devise for inserting the value if to put mean value of the day into the NAs.
    * inputting missing data increase the estimates of the total number of steps per day 
    
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
+### yes, there are differences between weekdays and weekends as shown in the following pictures.
 
 ```{r echo=TRUE}
 data$date <- as.Date(data$date)
